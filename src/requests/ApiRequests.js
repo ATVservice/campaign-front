@@ -66,23 +66,27 @@ export const uploadCommitment = async (data) => {
 };
 
 
-export const getCommitment = async () => {
+export const getCommitment = async (isActive=null) => {
   try {
-    const response = await apiConfig.get('/api/commitment'); 
+    const response = await apiConfig.get(`/api/commitment?isActive=${isActive}`); 
+    console.log(response);
     return response;
   } catch (error) {
     console.log(error);
+    throw error;
   }
 }
 
-export const getCommitmentsByCampaign = async (campainName) => {
+export const getCommitmentsByCampaign = async (campaignName, isActive=null) => { // Fixed "campainName" typo
   try {
-    const response = await apiConfig.get(`/api/commitment/getCommitmentsByCampaign/${campainName}`); 
-    return response;
+    console.log(campaignName);
+    const response = await apiConfig.get(`/api/commitment/getCommitmentsByCampaign?campaignName=${encodeURIComponent(campaignName)}&isActive=${encodeURIComponent(isActive)}`);
+    return response.data; // It's common to return `response.data`, not the full response object
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching commitments:", error); // Improved error logging
+    throw error; // Rethrow the error to handle it where the function is called
   }
-}
+};
 
 export const uploadPayment = async (paymentData) => {
   try {
@@ -105,6 +109,7 @@ export const deletePayment = async (paymentId) => {
     return response;
   } catch (error) {
     console.error('Error deleting payment:', error);
+    throw error;
   }
 };
 // export const uploadCommitmentPayment = async (paymentData) => {
@@ -138,6 +143,7 @@ export const getCommitmentDetails = async (_id) => {
     return response.data;
   } catch (error) {
     console.log(error);
+    throw error;
   }
 };
 
@@ -148,16 +154,26 @@ export const deleteCommitment = async (commitmentId) => {
     const response = await apiConfig.delete(`/api/commitment/delete-commitment/${commitmentId}`);
     return response;
   } catch (error) {
+    throw error
     console.log(error);
   }
 };
 
-export const updateCommitmentDetails = async (commitmentId, updatedData) => {
+export const updateCommitmentDetails = async (commitment) => {
   try {
-    const response = await apiConfig.post(`/api/commitment/update-commitment-details/${commitmentId}`, updatedData);
+    const response = await apiConfig.post(`/api/commitment/update-commitment-details`, commitment);
     return response;
   } catch (error) {
     console.error('Error updating commitment:', error);
+    throw error;
+  }
+};
+export const uploadCommitmentPayment = async (payment) => {
+  try {
+    const response = await apiConfig.post(`/api/commitment/upload-commitment-payment`, payment);
+    return response;
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 };
@@ -188,7 +204,7 @@ export const addCampain= async (data) => {
     const response = await apiConfig.post(`/api/campain/add-campain`,data);
     return response;
   } catch (error) {
-    console.log(error);
+    throw error
   }
 }
 
@@ -205,7 +221,9 @@ export const getCampainPeople= async (campainName) => {
     const response = await apiConfig.get(`/api/campain/get-campain-people/${campainName}`);
     return response;
   } catch (error) {
+
     console.log(error);
+    throw error
   }
 }
 export const getPeopleNotInCampain= async (campainName) => {
@@ -214,6 +232,7 @@ export const getPeopleNotInCampain= async (campainName) => {
     return response;
   } catch (error) {
     console.log(error);
+    throw error
   }
 }
 export const addPersonToCampain= async (data) => {
@@ -223,21 +242,22 @@ export const addPersonToCampain= async (data) => {
     const response = await apiConfig.post(`/api/campain/add-person-to-campain`,data);
     return response;
   } catch (error) {
-    console.log(error);
-  }
-}
-export const addPeopleToCampain= async (data) => {
-  try {
-    const response = await apiConfig.post(`/api/campain/add-people-to-campain`,data);
-    return response;
-  } catch (error) {
-    console.log(error);
+    throw error
   }
 }
 
-export const getCommitmentInCampain= async (campainName) => {
+export const deletePersonFromCampain= async (AnashIdentifier, campainName) => {
   try {
-    const response = await apiConfig.get(`/api/campain/get-commitment-in-campain/${campainName}`);
+    const response = await apiConfig.delete(`/api/campain/delete-person-from-campain/${AnashIdentifier}/${campainName}`);
+    return response;
+  } catch (error) {
+throw error
+  }
+}
+
+export const getCommitmentInCampain= async (campainName,isActive=null) => {
+  try {
+    const response = await apiConfig.get(`/api/campain/get-commitment-in-campain/${campainName}?isActive=${isActive}`);
     return response;
   } catch (error) {
     console.log(error);
@@ -262,10 +282,17 @@ export const getCommitmentByAnashAndCampain= async (AnashIdentifier, CampainName
     throw error
   }
 }
-export const uploadCommitmentPayment = async (data) => {
-  console.log(data)
+export const reviewCommitmentsPayments = async (data,campainName) => {
   try {
-    const response = await apiConfig.post(`/api/commitment/upload-commitment-payment`,data);
+    const response = await apiConfig.post(`/api/commitment/review-commitment-payments`,{data,campainName});
+    return response;
+  } catch (error) {
+    throw error
+  }
+}
+export const uploadCommitmentsPayments = async (data) => {
+  try {
+    const response = await apiConfig.post(`/api/commitment/upload-commitment-payments`,data);
     return response;
   } catch (error) {
     throw error
@@ -413,6 +440,70 @@ export const updateManegerDetails = async (data) => {
     throw error
   }
 }
+export const reviewCommitments = async (data) => {
+  try {
+    const response = await apiConfig.post(`/api/commitment/review-commitments`, data); 
+    return response;
+  } catch (error) {
+    throw error
+  }
+}
+export const uploadCommitments = async (data) => {
+  try {
+    const response = await apiConfig.post(`/api/commitment/upload-commitments`, data); 
+    return response;
+  } catch (error) {
+    throw error
+  }
+}
+export const validateUserPassword = async (manegerPassword) => {
+  try {
+    console.log(manegerPassword);
+    const response = await apiConfig.post(`/api/auth/validate-password`, {manegerPassword}); 
+    return response;
+  } catch (error) {
+    throw error
+  }
+}
+export const editCampainDetails = async (updatedCampain,deletedMemorialDays,campainId) => {
+  try {
+    const response = await apiConfig.post(`/api/campain/edit-campain-details/${campainId}`, {updatedCampain,deletedMemorialDays}); 
+    return response;
+  } catch (error) {
+    throw error
+  }
+}
+export const reviewDeletedMemorialDays = async (updatedCampain,campainId) => {
+  console.log(updatedCampain);
+  try {
+    const response = await apiConfig.post(`/api/campain/review-deleted-memorial-dates/${campainId}`, updatedCampain); 
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error
+  }
+}
+export const reviewBefourAddPeopleToCampain = async (campainName,people) => {
+  try {
+    const response = await apiConfig.post(`/api/campain/review-befour-add-people-to-campain`, {campainName,people}); 
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error
+  }
+}
+export const addPeopleToCampain= async (campainName,people) => {
+  try {
+    const response = await apiConfig.post(`/api/campain/add-people-to-campain`,{campainName,people});
+    return response;
+  } catch (error) {
+    throw error
+  }
+}
+
+
+
+
  
 
 

@@ -8,7 +8,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 
 
-function CommitmentTable({rowsData}) {
+function CommitmentTable({rowsData,setShowCommitmentsOfActivePeople,showCommitmentsOfActivePeople=true}) {
     //   const [rowData, setRowData] = useState([]);
       const [gridApi, setGridApi] = useState(null);
       const navigate = useNavigate();
@@ -72,16 +72,26 @@ function CommitmentTable({rowsData}) {
               const _id = params.data._id;
               navigate(`/commitment-details/${_id}`);
             };
-      
+        
             return (
-              <button onClick={() => handleDetailsClick()}>
+              <div
+                onClick={() => handleDetailsClick()}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%',
+                  height: '100%',
+                  cursor: 'pointer',
+                }}
+              >
                 <CgDetailsMore style={{ fontSize: '20px' }} />
-              </button>
+              </div>
             );
           },
-          width: 100, 
-          headerClass: 'multi-line-header'
-        },
+          width: 100,
+          headerClass: 'multi-line-header',
+        },        
         { 
           headerName: 'מזהה אנש', 
           field: 'AnashIdentifier', 
@@ -148,8 +158,8 @@ function CommitmentTable({rowsData}) {
         { 
           headerName: 'אופן תשלום', 
           field: 'PaymentMethod', 
-          minWidth: 90, 
-          maxWidth: 100, 
+          minWidth: 150, 
+          maxWidth: 150, 
           headerClass: 'multi-line-header', 
           ...commonColumnProps 
         },
@@ -158,7 +168,7 @@ function CommitmentTable({rowsData}) {
           field: 'Notes', 
           minWidth: 200, 
           maxWidth: 250, 
-          flex: 1.5, 
+          flex: 1,
           ...commonColumnProps 
         }
       ];
@@ -196,6 +206,9 @@ function CommitmentTable({rowsData}) {
           align-items: center;
           height: 100%;
         }
+          .ag-root-wrapper {
+  z-index: 0; 
+}
       `;
       
       const styleSheet = document.createElement("style");
@@ -231,48 +244,60 @@ function CommitmentTable({rowsData}) {
         overflowX: 'hidden',
         margin: '0 auto',
         width: '98vw',
+        position: 'relative', // Add this
+      };
+      const searchStyle = {
+        position: 'relative',
+        zIndex: 2,
       };
     
-  return (
-
-    <div className="ag-theme-alpine" style={gridStyle}>
-    <input
-          type="text"
-          placeholder="חפש..."
-          value={searchText}
-          onChange={onSearchChange}
-          className="mb-2 p-2 border rounded"
-        />
-
-    <AgGridReact
-      columnDefs={columns}
-      rowData={rowsData}
-      pagination={true}
-      paginationPageSize={50}
-      domLayout="normal"
-      enableRtl={true}
-      onGridReady={onGridReady}
-      quickFilterText={searchText}
-      defaultColDef={{
-        minWidth: 50,
-        maxWidth: 300,
-        resizable: true,
-        sortable: true,
-        filter: true,
-        editable: false,
-        filterParams: {
-          filterOptions: hebrewFilterOptions, // Custom Hebrew filter options
-        },
+    
         
-      }}
-      gridOptions={{
-        enableCellTextSelection: true,
-      }}
-
-    />
-  </div>
-
-  )
-}
+      return (
+        <div style={{ position: 'relative' }}> {/* Wrapper with stacking context */}
+          <div className="flex items-end gap-2 mb-2">
+            <input
+              type="text"
+              placeholder="חפש..."
+              value={searchText}
+              onChange={onSearchChange}
+              className="border rounded"
+              style={searchStyle}
+            />
+            <input type="checkbox" checked={showCommitmentsOfActivePeople}
+            className="border border-gray-300 rounded-sm focus:outline-none w-4 h-4 focus:ring-2 focus:ring-sky-100"
+             onChange={()=>setShowCommitmentsOfActivePeople(!showCommitmentsOfActivePeople)}/>
+          </div>
+          
+          <div className="ag-theme-alpine" style={gridStyle}>
+            <AgGridReact
+              columnDefs={columns}
+              rowData={rowsData}
+              pagination={true}
+              paginationPageSize={50}
+              domLayout="normal"
+              enableRtl={true}
+              onGridReady={onGridReady}
+              quickFilterText={searchText}
+              defaultColDef={{
+                minWidth: 50,
+                maxWidth: 300,
+                resizable: true,
+                sortable: true,
+                filter: true,
+                editable: false,
+                filterParams: {
+                  filterOptions: hebrewFilterOptions,
+                },
+              }}
+              gridOptions={{
+                enableCellTextSelection: true,
+              }}
+              suppressRowTransform={true}
+            />
+          </div>
+        </div>
+      );
+    };
 
 export default CommitmentTable

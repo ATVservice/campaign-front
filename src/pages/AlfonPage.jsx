@@ -22,6 +22,7 @@ function AlfonPage() {
     'מספר זהות': 'PersonID',
     'כתובת': 'Address',
     'מספר': 'AddressNumber',
+    'שם מזמין למסיבה': 'PartyInviterName',
     'קומה': 'floor',
     'מיקוד': 'zipCode',
     'עיר': 'City',
@@ -38,7 +39,6 @@ function AlfonPage() {
     'אחראי ועד': 'CommitteeResponsibility',
     'קבוצה למסיבה': 'PartyGroup',
     'מספר קבוצה': 'GroupNumber',
-    'שם מזמין למסיבה': 'PartyInviterName',
     'פעיל לא פעיל': 'isActive',
     'שדה חופשי': 'FreeFieldsToFillAlone',
     'שדה חופשי 2': 'AnotherFreeFieldToFillAlone',
@@ -52,7 +52,7 @@ function AlfonPage() {
   const navigate = useNavigate();
   const [alfonChangesData, setAlfonChangesData] = useState({});
   const inputRef = useRef(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [invalidUploads, setInvalidUploads] = useState([]);
   const [errorUploads, setErrorUploads] = useState([]);
   const [succesCount, setSuccesCount] = useState(0);
@@ -91,19 +91,21 @@ function AlfonPage() {
 
     try {
       setLoading(true);
+      console.log(combinedArray);
 
 
       const response = await uploadPeople(combinedArray);
       console.log(response);
-      setRowData(response.data.people || {});
       setErrorUploads(response.data.errorUploads || []);
       setInvalidUploads(invalidPeople || []);
       setSuccesCount(response.data.successCount || 0);
       setExistingCount(response.data.updatedDocCount || 0);
       setNewCount(response.data.newDocCount || 0);
+      await getPeople(true);
 
 
     } catch (error) {
+      setLoading(false);
       console.error(error);
     }
     finally {
@@ -153,6 +155,7 @@ function AlfonPage() {
 
           try {
             const response = await getAlfonChanges(mappedData);
+            
             setAlfonChangesData(response.data || []);
             setLoading(false)
             console.log(response);

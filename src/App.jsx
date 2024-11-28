@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import dollarsBackground from "./images/Dollars.jpg";
 import Navbar from "./features/Navbar";
-import AlfonPage from "./pages/AlfonPage";
+// import AlfonPage from "./pages/AlfonPage";
 import LoginPage from "./pages/LoginPage";
 import MenuPage from "./pages/MenuPage";
 // import CommitmentPage from "./pages/commitmentPage";
@@ -21,6 +21,7 @@ import CampainPage from "./pages/CampainPage";
 // import PeopleInCampain from "./pages/peopleInCampain";
 // import CampaignCommitments from "./pages/CampaignCommitments";
 import { ToastContainer } from "react-toastify";
+import DynamicTitle from "./components/DynamicTitle";
 import "react-toastify/dist/ReactToastify.css";
 import AddPersonPage from "./pages/AddPersonPage";
 import MemorialDay2 from "./pages/MemorialDay2";
@@ -37,6 +38,7 @@ import ResetPassword from "./pages/ResetPassword";
 import CommitmentPage2 from "./pages/CommitmentPage2";
 import CommitmentDetailsPage2 from "./pages/CommitmentDetailsPage2";
 import PeopleInCampain2 from "./pages/PeopleInCampain2";
+import AlfonPage2 from "./pages/AlfonPage2";
 Modal.setAppElement("#root");
 
 // Custom component to handle showing Navbar conditionally
@@ -58,6 +60,7 @@ const App = () => {
       <Router>
         <div>
           <ToastContainer />
+          <DynamicTitle />
           <Layout>
             <div className="flex-grow">
               <Routes>
@@ -70,7 +73,8 @@ const App = () => {
 
 
                 <Route element={<ProtectedRoute />}>
-                  <Route path="/alfon" element={<AlfonPage />} />
+                  {/* <Route path="/alfon" element={<AlfonPage />} /> */}
+                  <Route path="/alfon" element={<AlfonPage2 />} />
                   <Route path="/menu" element={<MenuPage />} />
                   <Route path="/commitments/:campainName?" element={<CommitmentPage2 />} />
                   <Route

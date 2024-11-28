@@ -12,7 +12,7 @@ import { GrUpdate } from "react-icons/gr";
 import { MdOutlineCancel } from "react-icons/md";
 
 
-function Table({rowData, setRowData ,setShowActivePeople ,showActivePeople}) {
+function Table({rowsData, setRowsData ,setShowActivePeople ,showActivePeople}) {
 
     const navigate = useNavigate();
     const [originalRowData, setOriginalRowData] = useState({});
@@ -37,6 +37,8 @@ function Table({rowData, setRowData ,setShowActivePeople ,showActivePeople}) {
         'טל נייד': 'MobilePhone',
         'טל בית': 'HomePhone',
         'פעיל': 'isActive',
+          'מתרים': 'fundRaiser',
+
       };
       const ActionCellRenderer = (props) => {
         const isCurrentRowEditing = props.api.getEditingCells().some((cell) => cell.rowIndex === props.node.rowIndex);
@@ -187,6 +189,7 @@ function Table({rowData, setRowData ,setShowActivePeople ,showActivePeople}) {
           filter: true,
           width: 120,
         },   
+        { headerName: 'מתרים', field: 'fundRaiser', editable: true, sortable: true, filter: true,width: 100 },
         {
           headerName: 'פעיל',
           field: 'isActive',
@@ -314,7 +317,7 @@ function Table({rowData, setRowData ,setShowActivePeople ,showActivePeople}) {
           <AgGridReact
 
             columnDefs={columns}
-            rowData={rowData}
+            rowData={rowsData}
             pagination={true}
             paginationPageSize={50} // Increase the pagination page size as needed
             domLayout="normal" // Use normal layout to keep grid within the container height

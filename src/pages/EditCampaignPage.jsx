@@ -55,7 +55,7 @@ function EditCampaignPage() {
         ...prevData,
         hebrewStartDate: startHebrewDate.renderGematriya(),
       }));
-    } else if (name === "endDate") {
+    } else if (key === "endDate") {
       const endHebrewDate = new HDate(new Date(day.date));
       setEditedCampainData((prevData) => ({
         ...prevData,

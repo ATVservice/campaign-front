@@ -126,8 +126,8 @@ function PeopleInCampain2() {
       const response = await addPeopleToCampain(campainName, validPeople);
       if (response.status === 200) {
         console.log(response.data);
-        fetchPeopleNotInCampain()
-        fetchCampainPeople();
+        await fetchPeopleNotInCampain()
+        await fetchCampainPeople();
         toast.success("נוספו אנשים לקמפיין בהצלחה");
       } else {
         throw new Error("Failed to add people to the campaign");
@@ -146,8 +146,8 @@ function PeopleInCampain2() {
     try {
       setLoading(true);
       await addPersonToCampain({ campainName, AnashIdentifier });
-       fetchCampainPeople();
-       fetchPeopleNotInCampain();
+      await fetchCampainPeople();
+      await fetchPeopleNotInCampain();
       toast.success("תורם נוסף לקמפיין בהצלחה");
     } catch (error) {
       console.error("Error adding person to campaign:", error);
@@ -157,14 +157,18 @@ function PeopleInCampain2() {
     }
   }
   async function onDeletePersonFromCampain(AnashIdentifier) {
+    console.log(AnashIdentifier, campainName);
+    console.log('1');
     try {
       setLoading(true);
-      await deletePersonFromCampain({ campainName, AnashIdentifier });
+      await deletePersonFromCampain(AnashIdentifier, campainName);
       await fetchCampainPeople();
       await fetchPeopleNotInCampain();
       toast.success("תורם הוסר מהקמפיין בהצלחה");
     } catch (error) {
       console.error("Error deleting person from campaign:", error);
+      toast.error(error.response?.data?.message||"שגיאה בהסרה מהקמפיין");
+
     } finally {
       setLoading(false);
     }

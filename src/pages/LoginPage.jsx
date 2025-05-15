@@ -9,7 +9,7 @@ import { useAuth } from '../components/AuthProvider';
 import Spinner from "../components/Spinner";
 
 const Login = () => {
-  const { user, loginUser, logoutUser } = useAuth();
+  const {  loginUser } = useAuth();
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false); // מצב הצגת סיסמה
   const [formData, setFormData] = useState({
@@ -33,10 +33,11 @@ const Login = () => {
     try {
       setLoading(true);
       
-      const res = await login(formData);
+      const res = await loginUser(formData);
+      console.log('rr');
+      console.log(res);
 
       if(res.status === 201||res.status === 200){
-        loginUser( res.data.token, res.data.user);
         navigate("/menu");
       }
       console.log(res);

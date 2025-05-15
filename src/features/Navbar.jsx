@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation , useNavigate} from 'react-router-dom';
 import { FaUser } from 'react-icons/fa';
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { useAuth } from '../components/AuthProvider';
@@ -8,10 +8,12 @@ import { logOut } from '../requests/ApiRequests';
 const Navbar = () => {
   const { logoutUser } = useAuth();
   const location = useLocation(); // שימוש ב-useLocation כדי לבדוק את הנתיב הנוכחי
+  const navigate = useNavigate();
 
    function LogoutUser() {
     try {
         logoutUser();
+        navigate('/login');
       }
     catch (error) {
       console.error(error);

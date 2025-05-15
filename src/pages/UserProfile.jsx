@@ -49,10 +49,13 @@ function UserProfile() {
   useEffect(() => {
     // setUpdatedUser(user);
     const fetchData = async () => {
+      // console.log(user);
       if (user && user.Role === "Admin") {
         try {
+          console.log(user);
           setLoading(true);
           const res = await getUsers();
+          console.log(res);
           setUsers(res.data.users);
           console.log(res);
         } catch (error) {

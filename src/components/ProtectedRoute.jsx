@@ -1,17 +1,27 @@
-import React from 'react';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useAuth } from '../components/AuthProvider';
-import { Outlet, Navigate } from 'react-router-dom';
+import Spinner from './Spinner';
 
 function ProtectedRoute() {
-  const { user } = useAuth();
-  console.log('user', user);
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
 
-  // If the user is not logged in, navigate to the login page
-  if (!user) {
-    return <Navigate to="/login" />;
+  useEffect(() => {
+    console.log(user);
+    if (!loading && !user) {
+      navigate('/login');
+    }
+  }, [loading, user, navigate]);
+
+  if (loading) {
+    return <Spinner />;
   }
 
-  // If the user is logged in, render the nested routes (children)
+  if (!user) {
+    return null; // Don't render anything until navigate redirects
+  }
+
   return <Outlet />;
 }
 

@@ -13,6 +13,7 @@ function EditManagerForm({
   bgColor = "bg-white",
 }) {
   const [showPassword, setShowPassword] = useState(false);
+  console.log(updatedUser);
   // console.log(updatedUser);
 
   const togglePasswordVisibility = () => {

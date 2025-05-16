@@ -251,7 +251,7 @@ function UserProfile() {
         <h2 className="mb-2 border-b border-gray-300">
           {user.Role === "Admin" ? "פרטי מנהל" : "פרטי משתמש"}{" "}
         </h2>
-        {updatedUser?._id === user._id ? (
+        {updatedUser&& updatedUser._id === user._id ? (
           <EditManagerForm
             handelSubmit={handelUpdateSubmit}
             handleUpdateChange={handelupdateChange}

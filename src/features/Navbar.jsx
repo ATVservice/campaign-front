@@ -1,9 +1,7 @@
-import React from 'react';
-import { Link, useLocation , useNavigate} from 'react-router-dom';
 import { FaUser } from 'react-icons/fa';
 import { RiLogoutCircleLine } from "react-icons/ri";
-import { useAuth } from '../components/AuthProvider';
-import { logOut } from '../requests/ApiRequests';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../components/StateManegment/AuthProvider';
 
 const Navbar = () => {
   const { logoutUser } = useAuth();

@@ -1,48 +1,46 @@
 // App.jsx
-import React from "react";
 import {
-  BrowserRouter as Router,
+  Navigate,
   Route,
+  BrowserRouter as Router,
   Routes,
   useLocation,
-  Navigate,
 } from "react-router-dom";
-import dollarsBackground from "./images/Dollars.jpg";
 import Navbar from "./features/Navbar";
 // import AlfonPage from "./pages/AlfonPage";
-import LoginPage from "./pages/LoginPage";
-import MenuPage from "./pages/MenuPage";
+import LoginPage from "./pages/General/LoginPage";
+import MenuPage from "./pages/General/MenuPage";
 // import CommitmentPage from "./pages/commitmentPage";
-import UserDetailsPage from "./pages/UserDetailsPage";
+import UserDetailsPage from "./pages/Alfon/UserDetailsPage";
 // import CommitmentDetailsPage from "./pages/CommitmentDetailsPage";
-import CampainsPage from "./pages/CampainsPage";
-import MemorialBoard from "./pages/MemorialBoard";
-import CampainPage from "./pages/CampainPage";
+import CampainPage from "./pages/Campaign/CampainPage";
+import CampainsPage from "./pages/Campaign/CampainsPage";
+import MemorialBoard from "./pages/MemorialDays/MemorialBoard";
 // import PeopleInCampain from "./pages/peopleInCampain";
 // import CampaignCommitments from "./pages/CampaignCommitments";
 import { ToastContainer } from "react-toastify";
-import DynamicTitle from "./components/DynamicTitle";
 import "react-toastify/dist/ReactToastify.css";
-import AddPersonPage from "./pages/AddPersonPage";
-import MemorialDay2 from "./pages/MemorialDay2";
-import Modal from "react-modal";
-import MemorialDayDetails from "./pages/MemorialDayDetails";
-import AddMemorialDayToPerson from "./pages/AddMemorialDayToPerson";
-import EditCampaignPage from "./pages/EditCampaignPage";
-import PettyCash from "./pages/PettyCash";
-import { AuthProvider } from "./components/AuthProvider";
-import ProtectedRoute from "./components/ProtectedRoute";
-import UserProfile from "./pages/UserProfile";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import CommitmentPage2 from "./pages/CommitmentPage2";
-import CommitmentDetailsPage2 from "./pages/CommitmentDetailsPage2";
-import PeopleInCampain2 from "./pages/PeopleInCampain2";
-import AlfonPage2 from "./pages/AlfonPage2";
-import PaymentsWithoutCommitment from "./pages/PaymentsWithoutCommitment";
-import ReportNavigation from "./pages/ReportNavigation";
-import ReportCommitments from "./pages/ReportCommitments";
-import ReportPayments from "./pages/ReportPayments";
+import DynamicTitle from "./components/General/DynamicTitle";
+import ProtectedRoute from "./components/General/ProtectedRoute";
+import { AuthProvider } from "./components/StateManegment/AuthProvider";
+import AddPersonPage from "./pages/Alfon/AddPersonPage";
+import AlfonPage2 from "./pages/Alfon/AlfonPage2";
+import EditCampaignPage from "./pages/Campaign/EditCampaignPage";
+import PeopleInCampain2 from "./pages/Campaign/PeopleInCampain2";
+import CommitmentDetailsPage2 from "./pages/Commitments/CommitmentDetailsPage2";
+import CommitmentPage2 from "./pages/Commitments/CommitmentPage2";
+import ForgotPassword from "./pages/General/ForgotPassword";
+import PettyCash from "./pages/General/PettyCash";
+import ResetPassword from "./pages/General/ResetPassword";
+import AddMemorialDayToPerson from "./pages/MemorialDays/AddMemorialDayToPerson";
+import MemorialDay2 from "./pages/MemorialDays/MemorialDay2";
+import MemorialDayDetails from "./pages/MemorialDays/MemorialDayDetails";
+import PaymentsWithoutCommitment from "./pages/Payments/PaymentsWithoutCommitment";
+import UserProfile from "./pages/Profile/UserProfile";
+import ReportCommitments from "./pages/Reports/ReportCommitments";
+import ReportNavigation from "./pages/Reports/ReportNavigation";
+import ReportPayments from "./pages/Reports/ReportPayments";
+
 // Modal.setAppElement("#root");
 
 // Custom component to handle showing Navbar conditionally

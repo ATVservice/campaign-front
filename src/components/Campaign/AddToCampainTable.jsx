@@ -142,6 +142,11 @@ import { useNavigate } from "react-router-dom";
           }}
           gridOptions={{
             enableCellTextSelection: true,
+                            localeText:{
+                      noRowsToShow: 'אין שורות להצגה'
+
+                }
+
           }}
 
         />

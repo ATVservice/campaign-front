@@ -132,6 +132,11 @@ return (
       }}
       gridOptions={{
         enableCellTextSelection: true,
+                        localeText:{
+                      noRowsToShow: 'אין שורות להצגה'
+
+                }
+
       }}
       getRowClass={(params) => {
         // Return Tailwind classes based on your condition

@@ -106,6 +106,7 @@ function PaymentsWithoutCommitmentTable({ rowsData = [] ,onSelectCampain}) {
       editable: false,
       sortable: true,
       filter: true,
+    flex: 1,
     },
     {
       headerName: "משפחה",
@@ -172,8 +173,13 @@ function PaymentsWithoutCommitmentTable({ rowsData = [] ,onSelectCampain}) {
       editable: false,
       colId: "action",
       width: 150,
-      flex: 1,
+      flex: 0,
       minWidth: 100,
+      cellStyle: {
+    display: "flex",
+    justifyContent: "center", // Horizontal center
+    alignItems: "center"      // Vertical center
+  }
     },
   ];
 
@@ -241,6 +247,10 @@ function PaymentsWithoutCommitmentTable({ rowsData = [] ,onSelectCampain}) {
           gridOptions={{
             enableCellTextSelection: true,
             suppressCellFocus: true, // This prevents cell focus
+                          localeText: {
+    noRowsToShow: 'אין שורות להצגה'
+  }
+  
 
           }}
         />

@@ -251,6 +251,7 @@ function Table({
       editable: true,
       sortable: true,
       filter: true,
+      flex: 1,
     },
     {
       headerName: "משפחה",
@@ -298,45 +299,19 @@ function Table({
       filter: true,
       width: 150,
     },
-    // {
-    //   headerName: 'פעיל',
-    //   field: 'isActive',
-    //   // filter: true,
-    //   editable: false,
-
-    //   width: 100,
-    //   filterParams: {
-    //     defaultOption: 'true',
-    //   },
-
-    //   // editable: true,
-
-    //   // width: 80,
-    //   cellRenderer: (params) => {
-    //     return (
-    //       <input
-    //       id={`isActive-${params.data.AnashIdentifier}`}
-
-    //         type="checkbox"
-    //         checked={params.value?.toString() === 'true'}
-    //         disabled
-    //         style={{
-    //           width: '15px',
-    //           height: '15px',
-    //           margin: 'auto'
-    //         }}
-
-    //       />
-    //     );
-    //       },
-    // },
+  
     {
       headerName: "עריכה/שחזור/מחיקה",
       cellRenderer: ActionCellRenderer,
       editable: false,
       colId: "action",
       width: 150,
-      flex:1,
+      flex:0,
+      cellStyle: {
+    display: "flex",
+    justifyContent: "center", // Horizontal center
+    alignItems: "center"      // Vertical center
+  }
     },
   ];
   const onRowEditingStarted = (params) => {
@@ -415,6 +390,7 @@ function Table({
           }}
           gridOptions={{
             enableCellTextSelection: true,
+
           }}
         />
       </div>

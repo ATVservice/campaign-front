@@ -133,6 +133,11 @@ function AddToMemmorialDayTable({ rowData, onAddMemorialDayToPerson }) {
             }}
             gridOptions={{
               enableCellTextSelection: true,
+                              localeText:{
+                      noRowsToShow: 'אין שורות להצגה'
+
+                }
+
             }}
 
           />

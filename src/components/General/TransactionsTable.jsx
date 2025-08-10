@@ -4,7 +4,6 @@ import { AgGridReact } from 'ag-grid-react';
 import { useState } from 'react';
 import { FaTrash } from 'react-icons/fa'; // ייבוא האייקון
 import { deleteTransaction } from '../../requests/ApiRequests';
-import { AG_GRID_LOCALE_IL } from './ag-grid-localization';
 function TransactionsTable({ rowsData, fetchTransactions,gridRef}) {
     const [searchText, setSearchText] = useState("");
   
@@ -16,6 +15,7 @@ function TransactionsTable({ rowsData, fetchTransactions,gridRef}) {
       editable: false,
       sortable: true,
       filter: true,
+      flex: 1,
     },
     {
       headerName: 'סוג תנועה',
@@ -104,7 +104,7 @@ function TransactionsTable({ rowsData, fetchTransactions,gridRef}) {
     },
     {
       headerName: 'מחיקה',
-      flex: 1,
+      flex: 0,
       cellRenderer: (params) => {
         if (params.data.TransactionType === 'הוצאה') {
           return (
@@ -118,6 +118,11 @@ function TransactionsTable({ rowsData, fetchTransactions,gridRef}) {
         }
         return null;
       },
+       cellStyle: {
+    display: "flex",
+    justifyContent: "center", // Horizontal center
+    alignItems: "center"      // Vertical center
+  }
     },
   ];
 
@@ -184,7 +189,11 @@ function TransactionsTable({ rowsData, fetchTransactions,gridRef}) {
 
           gridOptions={{
             enableCellTextSelection: true,
-            localeText: AG_GRID_LOCALE_IL
+                           localeText:{
+                      noRowsToShow: 'אין שורות להצגה'
+
+                }
+
           }}
       
         />

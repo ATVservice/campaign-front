@@ -208,6 +208,11 @@ function CampainTable({ rowData, onDeletePersonFromCampain ,searchInText}) {
           }}
           gridOptions={{
             enableCellTextSelection: true,
+                            localeText:{
+                      noRowsToShow: 'אין שורות להצגה'
+
+                }
+
           }}
 
         />

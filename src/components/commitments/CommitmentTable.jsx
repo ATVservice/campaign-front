@@ -241,7 +241,7 @@ function CommitmentTable({rowsData,setShowCommitmentsOfActivePeople,showCommitme
       };
     
       const gridStyle = {
-        height: '80vh',
+        height: '70vh',
         overflow: 'auto',
         overflowX: 'hidden',
         margin: '0 auto',

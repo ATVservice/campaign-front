@@ -1,7 +1,6 @@
 
 
 import axios from 'axios';
-import { useNavigate ,useLocation} from 'react-router-dom';
 
 // Create an axios instance with default configurations 
 const apiConfig = axios.create({
@@ -575,6 +574,14 @@ export const restoreDatabase = async () => {
   }
 }
 
+export const protect = async () => {
+  try {
+    const response = await apiConfig.get(`/api/auth/protect`);
+    return response;
+  } catch (error) {
+    throw error
+  }
+}
 
 
 

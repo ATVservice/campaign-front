@@ -259,6 +259,7 @@ function Table({
       editable: true,
       sortable: true,
       filter: true,
+      flex: 1,
     },
     {
       headerName: "כתובת",
@@ -333,7 +334,7 @@ function Table({
     });
   };
   const gridStyle = {
-    height: "78vh", // Adjust based on your layout needs
+    height: "75vh", // Adjust based on your layout needs
     overflow: "auto", // Ensure scrolling within the grid
     margin: "0 auto", // Center the grid
     width: "98vw", // Adjust based on your layout needs

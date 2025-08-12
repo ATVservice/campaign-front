@@ -1,31 +1,39 @@
 
 
-import { createContext, useContext, useState } from 'react';
-import { login, logOut } from '../../requests/ApiRequests';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { login, logOut, protect } from '../../requests/ApiRequests';
 import Spinner from '../General/Spinner';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false); // true until we check with backend
-  // useEffect(() => {
+  const [loading, setLoading] = useState(true); // true until we check with backend
+ 
+ 
+ 
+  useEffect(() => {
     
-  //   const checkLogin = async () => {
-  //     if(user) return
-  //     try {
-  //       setLoading(true);
-  //       const res = await login();
-  //       console.log(res);
-  //       setUser(res.data.user);
-  //     } catch (error) {
-  //       console.error(error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   checkLogin();
-  // })
+    const checkLogin = async () => {
+      if(user) 
+      {
+        setLoading(false);
+        return
+      }
+      try {
+        setLoading(true);
+        const res = await protect();
+        console.log(res.data.user);
+        setUser(res.data.user);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkLogin();
+  }, []);
+
 
 
 
@@ -64,7 +72,7 @@ export function AuthProvider({ children }) {
   if (loading) return <Spinner />;
 
   return (
-    <AuthContext.Provider value={{ user, loginUser, logoutUser }}>
+    <AuthContext.Provider value={{ user, loginUser, logoutUser,loading }}>
       {children}
     </AuthContext.Provider>
   );

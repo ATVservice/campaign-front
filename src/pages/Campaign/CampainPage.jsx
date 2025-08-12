@@ -113,7 +113,7 @@ function CampainPage() {
   }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-gray-50">
       <h1 className="text-2xl font-semibold text-center mb-6 border-button ">ניהול {campainName} <span className='text-gray-600'>טווח תאריכים</span>: {campainHebrewDatesRange.startDate} - {campainHebrewDatesRange.endDate}</h1>
 
       {/* הצגת מספרים רצים */}

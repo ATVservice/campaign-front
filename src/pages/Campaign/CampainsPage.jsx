@@ -95,7 +95,7 @@ function CampainsPage() {
   // if(loading) return <Spinner />
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="p-6">
       <h1 className="text-2xl font-bold mb-4 text-blue-700">קמפיינים</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 mb-6">
         {campains.map((campain) => (

@@ -5,6 +5,7 @@ import Spinner from './Spinner';
 
 function ProtectedRoute() {
   const { user, loading } = useAuth();
+  console.log(user, loading);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +23,12 @@ function ProtectedRoute() {
     return null; // Don't render anything until navigate redirects
   }
 
-  return <Outlet />;
+ return (
+    <main className=''>
+      <Outlet />             
+    </main>
+)
 }
+
 
 export default ProtectedRoute;

@@ -204,10 +204,10 @@ function AlfonPage2() {
 
   if (loading) return <Spinner />
   return (
-    <div className="relative min-h-screen pt-4 pb-2"> {/* Added padding at the top and reduced at the bottom */}
+    <div className="relative"> {/* Added padding at the top and reduced at the bottom */}
 
       <>
-        <div className="flex items-center mb-2 w-full justify-start gap-4"> {/* Space between buttons */}
+        <div className="flex items-center mb-2 w-full justify-start gap-4 pt-4"> {/* Space between buttons */}
           <input
             type="file"
             onChange={handleFileUpload}

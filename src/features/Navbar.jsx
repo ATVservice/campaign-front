@@ -33,7 +33,7 @@ const Navbar = () => {
 
   return (
     <nav
-  className={` inset-x-0 top-0 z-50 h-16 px-8 flex items-center justify-between shadow-lg
+  className={`sticky inset-x-0 top-0 z-50 h-16 px-8 flex items-center justify-between shadow-lg
               transition-all duration-300
               ${scrolled ? 'bg-indigo-800/90' : 'bg-indigo-800/95'}`}
     >

@@ -24,9 +24,7 @@ function ProtectedRoute() {
   }
 
  return (
-    <main className=''>
       <Outlet />             
-    </main>
 )
 }
 

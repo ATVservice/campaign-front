@@ -170,9 +170,8 @@ function TransactionsTable({ rowsData, fetchTransactions,gridRef}) {
         />
       </div>
 
-      <div className="ag-theme-alpine"       style={{
+      <div className="ag-theme-alpine h-[70vh] max-h-[65vh]"       style={{
         width: '100%', // Ensure the container is full width
-        height: '400px'
       }}
       >
         <AgGridReact
@@ -180,7 +179,7 @@ function TransactionsTable({ rowsData, fetchTransactions,gridRef}) {
           rowData={rowsData}
           pagination={true}
           paginationPageSize={20}
-          domLayout="autoHeight"
+          domLayout="normal"
           enableRtl={true}
           ref={gridRef}
           getRowStyle={getRowStyle}

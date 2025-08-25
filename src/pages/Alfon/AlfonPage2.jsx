@@ -31,7 +31,7 @@ function AlfonPage2() {
 
   const navigate = useNavigate();
 
-
+  console.log("nisayon")
 
   useEffect(() => {
     const fetchData = async () => {

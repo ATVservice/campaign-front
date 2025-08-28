@@ -90,7 +90,7 @@ function CommitmentDetailsPage2() {
   };
 
   const UploadCommitmentPayment = async (paymentData) => {
-    toast.success( 'התשלום נוסף בהצלחה');
+    //toast.success( 'התשלום נוסף בהצלחה');
     try {
       setIsLoading(true);
       const response = await uploadCommitmentPayment(paymentData);
@@ -100,7 +100,8 @@ function CommitmentDetailsPage2() {
         setCommitmentForm(response.data.updatedCommitment);
         
         setCommitmentPayments([...commitmentPayments, response.data.newPayment]);
-        console.log('eeeeeee');
+        //console.log('eeeeeee');
+        toast.success( 'התשלום נוסף בהצלחה');
 
       } else {
         console.error("Commitment update failed.");

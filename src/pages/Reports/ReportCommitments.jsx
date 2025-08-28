@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { exportReportCommitmentsToPDF, exportToExcel } from "../../../Reports/exportFilesHandler.jsx";
@@ -8,7 +8,7 @@ import { englishToHebrewCommitmentReportMapping } from '../../components/Utils.j
 import { getCampains, processCampainReport, processCommitmentReport } from '../../requests/ApiRequests.js';
 
 
- const englishToHebrewCommitmentFieldsMapping = {
+const englishToHebrewCommitmentFieldsMapping = {
   AnashIdentifier: 'מזהה אנש',
   FirstName: 'שם',
   LastName: 'משפחה',
@@ -24,15 +24,15 @@ import { getCampains, processCampainReport, processCommitmentReport } from '../.
   Notes: 'הערות',
   ResponseToFundraiser: 'תשובה למתרים',
   CampainName: 'קמפיין',
-  ReceivedGift:'קיבל מתנה',
-  
+  ReceivedGift: 'קיבל מתנה',
+
 };
 const englishToHebrewAlfonFieldsMapping = {
   City: 'עיר',
   MobilePhone: 'טל נייד',
   MobileHomePhone: 'נייד בבית 1',
   HomePhone: 'טל בית',
-  
+
 };
 
 const sortPageOptions = {
@@ -52,34 +52,45 @@ const sortPageOptions = {
   AnotherFreeFieldToFillAlone: 'שדה חופשי 2',
   Notes: 'הערות',
 
-  
+
 }
 
 
 
 function ReportCommitments() {
   const [campains, setCampains] = useState([]);
-  const [reportData, setReportData] = useState({selectedCampains:[],campainsToCompare:[],selectedFields: {commitmentFields: [],alfonFields: []},groupByField: '',sortByField: ''});
+  const [reportData, setReportData] = useState({ selectedCampains: [], campainsToCompare: [], selectedFields: { commitmentFields: [], alfonFields: [] }, groupByField: '', sortByField: '' });
   const [fieldsOptions, setFieldsOptions] = useState({
     ...englishToHebrewCommitmentFieldsMapping,
     ...englishToHebrewAlfonFieldsMapping,
   });
-    const [selectedFields, setSelectedFields] = useState([]);
-    const [selectedSortPageOption, setSelectedSortPageOption] = useState('');
-    const {campainName} = useParams();
-    const [isPdfState, setIsPdfState] = useState(true);
-    const [showReportModal, setShowReportModal] = useState(false);
-    const [reportResult, setReportResult] = useState([]);
-    const [dinamicColums, setDinamicColums] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    
-    
+  const [selectedFields, setSelectedFields] = useState([]);
+  const [selectedSortPageOption, setSelectedSortPageOption] = useState('');
+  const { campainName } = useParams();
+  const [isPdfState, setIsPdfState] = useState(true);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportResult, setReportResult] = useState([]);
+  const [dinamicColums, setDinamicColums] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const allFieldKeys = useMemo(() => Object.keys(fieldsOptions), [fieldsOptions]);
+  const selectAllRef = useRef(null);
+
+  useEffect(() => {
+    setSelectedFields((prev) => prev.filter((f) => allFieldKeys.includes(f)));
+  }, [allFieldKeys]);
+
+  useEffect(() => {
+    if (!selectAllRef.current) return;
+    const total = allFieldKeys.length;
+    const selected = selectedFields.length;
+    selectAllRef.current.indeterminate = selected > 0 && selected < total;
+  }, [selectedFields, allFieldKeys]);
 
   useEffect(() => {
 
     const fetchCampains = async () => {
-      if(campainName) {
-        setReportData((prevData) => ( {...prevData, selectedCampains: [campainName]}));
+      if (campainName) {
+        setReportData((prevData) => ({ ...prevData, selectedCampains: [campainName] }));
       }
       try {
         setIsLoading(true);
@@ -94,22 +105,22 @@ function ReportCommitments() {
       }
     };
 
-    fetchCampains(); 
-      
-  
-    
+    fetchCampains();
+
+
+
   }, []);
 
   const handleSelectCampains = (event) => {
     const isSelected = event.target.checked;
     const value = event.target.value;
-  
+
     setReportData((prevData) => {
       // const updatedCampainsToCompare = isSelected && prevData.campainsToCompare.includes(value)
       //   ? prevData.campainsToCompare.filter((campain) => campain !== value)
       //   : prevData.campainsToCompare;
       const updatedSelectedCampains = isSelected ? [...prevData.selectedCampains, value] : prevData.selectedCampains.filter((campain) => campain !== value);
-  
+
       return {
         ...prevData,
         selectedCampains: updatedSelectedCampains,
@@ -119,15 +130,15 @@ function ReportCommitments() {
   const handleSelectCampainsToCompare = (event) => {
     const isSelected = event.target.checked;
     const value = event.target.value;
-  
+
     setReportData((prevData) => {
       let updatedCampainsToCompare;
       let updatedSelectedCampain = prevData.selectedCampains;
-  
+
       if (!isSelected) {
         // Remove the campaign from campainsToCompare
         updatedCampainsToCompare = prevData.campainsToCompare.filter((campain) => campain !== value);
-  
+
         // If the deselected campaign is the selected one, unsele
       } else {
         // Add the campaign to campainsToCompare, maintaining the max of 3
@@ -135,25 +146,39 @@ function ReportCommitments() {
         if (updatedCampainsToCompare.length > 3) {
           updatedCampainsToCompare = updatedCampainsToCompare.slice(1); // Keep the last 3
         }
-  
-        
+
+
       }
-  
+
       return {
         ...prevData,
         campainsToCompare: updatedCampainsToCompare,
       };
     });
   };
-      
 
+
+  // const handleSelectField = (event) => {
+  //   const value = event.target.value;
+  //   const isSelected = event.target.checked;
+  //   if (isSelected) {
+  //     setSelectedFields([...selectedFields, value]);
+  //   } else {
+  //     setSelectedFields(selectedFields.filter((field) => field !== value));
+  //   }
+  // };
   const handleSelectField = (event) => {
     const value = event.target.value;
     const isSelected = event.target.checked;
+
     if (isSelected) {
-      setSelectedFields([...selectedFields, value]);
+      setSelectedFields((prev) => [...prev, value]);
     } else {
-      setSelectedFields(selectedFields.filter((field) => field !== value));
+      setSelectedFields((prev) => prev.filter((field) => field !== value));
+      setReportData((prev) => ({
+        ...prev,
+        sortByField: prev.sortByField === value ? '' : prev.sortByField,
+      }));
     }
   };
   const handleGroupByField = (event) => {
@@ -171,37 +196,46 @@ function ReportCommitments() {
     const checked = event.target.checked;
     const value = event.target.value;
     console.log(checked);
-  
+
     if (checked && !selectedFields.includes(value)) {
       toast.error('לא ניתן למיין לפי שדה שלא באחד משדות הבחירה');
-  
+
       // Ensure the checkbox is unchecked
       return;
     }
-  
+
     setReportData((prevData) => ({
       ...prevData,
       sortByField: checked ? value : '',
     }));
   };
-    
 
+
+  const handleToggleSelectAll = (e) => {
+    const checked = e.target.checked;
+    if (checked) {
+      setSelectedFields(allFieldKeys);
+    } else {
+      setSelectedFields([]);
+      setReportData((prev) => ({ ...prev, sortByField: '' }));
+    }
+  };
 
 
   const handleSubmit = async () => {
-    if(reportData.sortByField && !selectedFields.includes(reportData.sortByField)) {
+    if (reportData.sortByField && !selectedFields.includes(reportData.sortByField)) {
       toast.error('לא ניתן למיין לפי שדה שלא באחד משדות הבחירה');
       return
     }
 
     const commitmentfieldsKeys = Object.keys(englishToHebrewCommitmentFieldsMapping);
     const alfonFieldsKeys = Object.keys(englishToHebrewAlfonFieldsMapping);
-  
+
     // Create the updated report data in a local variable
     let updatedReportData = { ...reportData };
     // console.log(selectedFields);
     // return
-  
+
     for (let i = 0; i < selectedFields.length; i++) {
       if (commitmentfieldsKeys.includes(selectedFields[i])) {
         updatedReportData = {
@@ -228,131 +262,128 @@ function ReportCommitments() {
       }
     }
     const functionToExcute = campainName ? processCampainReport : processCommitmentReport;
-// console.log(updatedReportData);
-    try
-    {
+    // console.log(updatedReportData);
+    try {
       setIsLoading(true);
       const response = await functionToExcute(updatedReportData);
       // console.log(response);
       const reportData = response.data.reportData;
-    if(isPdfState)
-    {
+      if (isPdfState) {
 
-      exportReportCommitmentsToPDF(reportData,englishToHebrewCommitmentReportMapping,'commitmentsReport.pdf',updatedReportData.groupByField);
+        exportReportCommitmentsToPDF(reportData, englishToHebrewCommitmentReportMapping, 'commitmentsReport.pdf', updatedReportData.groupByField);
+      }
+      else {
+        const flatData = Object.values(reportData).flat();
+        let dynamicColumns = Array.from(
+          new Set(
+            flatData.flatMap((item) => Object.keys(item))
+          )
+        );
+        setDinamicColums(dynamicColumns);
+        setReportResult(flatData);
+        setShowReportModal(true);
+      }
+
+
+
+
+
+
+
     }
-    else
-    {
-      const flatData = Object.values(reportData).flat();
-      let dynamicColumns = Array.from(
-        new Set(
-          flatData.flatMap((item) => Object.keys(item))
-        )
-    );
-    setDinamicColums(dynamicColumns);
-    setReportResult(flatData);
-    setShowReportModal(true);
-  }
-
-    
-    
-
-      
-
-   
-  }
-  catch (error) {
-    console.error('שגיאה בטעינת הדו"ח', error);
-    toast.error(error.response.data.message || 'שגיאה בטעינת הדו"ח');
-  }
-  finally {
-    setIsLoading(false);
-  }
+    catch (error) {
+      console.error('שגיאה בטעינת הדו"ח', error);
+      toast.error(error.response.data.message || 'שגיאה בטעינת הדו"ח');
+    }
+    finally {
+      setIsLoading(false);
+    }
   };
-const onCloseModal = () => {
-  setShowReportModal(false);
-  setReportResult([]);
-}
-const handleSubmitExcel = async () => {
-  const reportName = campainName ? 'דו"ח קמפיין' : 'דו"ח התחייבויות';
-  exportToExcel(reportResult,dinamicColums,fieldsOptions, reportName);
-  
-  
-}
+  const onCloseModal = () => {
+    setShowReportModal(false);
+    setReportResult([]);
+  }
+  const handleSubmitExcel = async () => {
+    const reportName = campainName ? 'דו"ח קמפיין' : 'דו"ח התחייבויות';
+    exportToExcel(reportResult, dinamicColums, fieldsOptions, reportName);
 
-  
 
-  if(isLoading) {
+  }
+
+
+
+  if (isLoading) {
     return <Spinner />;
   }
-  
 
 
-  
+
+
   return (
     <div className="max-w-full mx-auto p-6 bg-white rounded-lg shadow-lg mt-2">
-<section className='flex justify-between'>
-  <section>
-    {!campainName && (
-              <>
-                <h1 className="text-xl font-bold mb-6">יצירת דו״ח התחייבויות</h1>
-                <section className="flex gap-10">
-                  <div className="mb-6 bg-indigo-100 rounded-lg p-4">
-                    <h2 className="text-lg font-semibold mb-3">בחר קמפיינים</h2>
-                    <div className="grid grid-cols-3 gap-3">
-                      {campains.map((campain) => (
-                        <label key={campain._id} className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            checked={reportData.selectedCampains.includes(campain.CampainName)}
-                            onChange={handleSelectCampains}
-                            value={campain.CampainName}
-                            className="rounded border-gray-300"
-                          />
-                          <span className="text-sm">{campain.CampainName}</span>
-                        </label>
-                      ))}
-                    </div>
+      <section className='flex justify-between'>
+        <section>
+          {!campainName && (
+            <>
+              <h1 className="text-xl font-bold mb-6">יצירת דו״ח התחייבויות</h1>
+              <section className="flex gap-10">
+                <div className="mb-6 bg-indigo-100 rounded-lg p-4">
+                  <h2 className="text-lg font-semibold mb-3">בחר קמפיינים</h2>
+                  <div className="grid grid-cols-3 gap-3">
+                    {campains.map((campain) => (
+                      <label key={campain._id} className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={reportData.selectedCampains.includes(campain.CampainName)}
+                          onChange={handleSelectCampains}
+                          value={campain.CampainName}
+                          className="rounded border-gray-300"
+                        />
+                        <span className="text-sm">{campain.CampainName}</span>
+                      </label>
+                    ))}
                   </div>
-                </section>
-              </>
-            )}
-            {campainName && (
-              <>
-                <h1 className="text-xl font-bold mb-6 bg-indigo-100 rounded-lg p-4">יצירת דו״ח קמפיין {campainName}</h1>
-              </>
-            )}
-  </section>
-  
-  <section >
-    <div className='flex gap-4 border border-gray-300 rounded-lg p-2 items-start'>
-      <label className="flex gap-2 font-bold items-center m-0">
-        <input
-          type="radio"
-          name="reportFormat"
-          value="pdf"
-          onChange={() => setIsPdfState(true)}
-          checked={isPdfState}
-          className="accent-red-600"
-        />
-        <span className="text-red-500">PDF</span>
-      </label>
-      <label className="flex gap-2 font-bold items-center m-0">
-        <input
-          type="radio"
-          name="reportFormat"
-          value="excel"
-          onChange={() => setIsPdfState(false)}
-          checked={!isPdfState}
-          className="accent-blue-600"
-        />
-        <span className="text-blue-500">Excel</span>
-      </label>
-    </div>
-</section>
-</section>
+                </div>
+              </section>
+            </>
+          )}
+          {campainName && (
+            <>
+              <h1 className="text-xl font-bold mb-6 bg-indigo-100 rounded-lg p-4">יצירת דו״ח קמפיין {campainName}</h1>
+            </>
+          )}
+        </section>
 
-         
-  
+        <section >
+          <div className='flex gap-4 border border-gray-300 rounded-lg p-2 items-start'>
+            <label className="flex gap-2 font-bold items-center m-0">
+              <input
+                type="radio"
+                name="reportFormat"
+                value="pdf"
+                onChange={() => setIsPdfState(true)}
+                checked={isPdfState}
+                className="accent-red-600"
+              />
+              <span className="text-red-500">PDF</span>
+            </label>
+            <label className="flex gap-2 font-bold items-center m-0">
+              <input
+                type="radio"
+                name="reportFormat"
+                value="excel"
+                onChange={() => setIsPdfState(false)}
+                checked={!isPdfState}
+                className="accent-blue-600"
+              />
+              <span className="text-blue-500">Excel</span>
+            </label>
+          </div>
+        </section>
+      </section>
+
+
+
       <div className="mb-6 bg-indigo-100 rounded-lg p-4">
         <h2 className="text-lg font-semibold mb-3"> קמפיינים סכומי התחייבות</h2>
         <div className="grid grid-cols-3 gap-3">
@@ -370,10 +401,10 @@ const handleSubmitExcel = async () => {
           ))}
         </div>
       </div>
-  
+
       {/* Field Selection */}
       <section className="flex gap-10">
-        <div className="mb-6 bg-indigo-50 rounded-lg p-4">
+        {/* <div className="mb-6 bg-indigo-50 rounded-lg p-4">
           <h2 className="text-lg font-semibold mb-3">בחירת שדות</h2>
           <div className="grid grid-cols-3 gap-3">
             {Object.entries(fieldsOptions).map(([field, label]) => (
@@ -389,51 +420,82 @@ const handleSubmitExcel = async () => {
               </label>
             ))}
           </div>
-        </div>
-  
-        
-{   
-isPdfState  &&
+        </div> */}
+        <div className="mb-6 bg-indigo-50 rounded-lg p-4">
+          <h2 className="text-lg font-semibold mb-3">בחירת שדות</h2>
 
-<div className="mb-6 bg-indigo-50 rounded-lg p-4">
-      <h2 className="text-lg font-semibold mb-3">חלוקת דפים לפי</h2>
-      <div className="grid grid-cols-3 gap-3">
-        {Object.entries(sortPageOptions).map(([field, label]) => (
-          <label key={field} className="flex items-center gap-2">
+          {/* בחר הכל - שייך רק ל"בחירת שדות" */}
+          <label className="flex items-center gap-2 mb-3 font-medium">
             <input
               type="checkbox"
-              checked={reportData.groupByField === field}
-              onChange={handleGroupByField}
-              value={field}
+              ref={selectAllRef}
+              onChange={handleToggleSelectAll}
+              checked={selectedFields.length === allFieldKeys.length && allFieldKeys.length > 0}
               className="rounded border-gray-300"
             />
-            <span className="text-sm">{label}</span>
+            <span className="text-sm">בחר הכל</span>
           </label>
-        ))}
-      </div>
-    </div>
-}  
 
-{/* Sort Selection */}
-<div className="mb-6 bg-indigo-50 rounded-lg p-4">
-  <h2 className="text-lg font-semibold mb-3">מיון לפי</h2>
-  <div className="grid grid-cols-3 gap-3">
-    {Object.entries(fieldsOptions).map(([field, label]) => (
-      <label key={field} className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          checked={reportData.sortByField === field}
-          onChange={handleSortByField}
-          value={field}
-          className="rounded border-gray-300"
-        />
-        <span className="text-sm">{label}</span>
-      </label>
-    ))}
-  </div>
-</div>
+          <div className="grid grid-cols-3 gap-3">
+            {Object.entries(fieldsOptions).map(([field, label]) => (
+              <label key={field} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={selectedFields.includes(field)}
+                  onChange={handleSelectField}
+                  value={field}
+                  className="rounded border-gray-300"
+                />
+                <span className="text-sm">{label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+
+
+        {
+          isPdfState &&
+
+          <div className="mb-6 bg-indigo-50 rounded-lg p-4">
+            <h2 className="text-lg font-semibold mb-3">חלוקת דפים לפי</h2>
+            <div className="grid grid-cols-3 gap-3">
+              {Object.entries(sortPageOptions).map(([field, label]) => (
+                <label key={field} className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={reportData.groupByField === field}
+                    onChange={handleGroupByField}
+                    value={field}
+                    className="rounded border-gray-300"
+                  />
+                  <span className="text-sm">{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        }
+
+        {/* Sort Selection */}
+        <div className="mb-6 bg-indigo-50 rounded-lg p-4">
+          <h2 className="text-lg font-semibold mb-3">מיון לפי</h2>
+          <div className="grid grid-cols-3 gap-3">
+            {Object.entries(fieldsOptions).map(([field, label]) => (
+              <label key={field} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={reportData.sortByField === field}
+                  onChange={handleSortByField}
+                  value={field}
+                  className="rounded border-gray-300"
+                />
+                <span className="text-sm">{label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
       </section>
-  
+
       <div className="flex justify-end">
         <button
           onClick={handleSubmit}
@@ -442,15 +504,15 @@ isPdfState  &&
           הוצא דו"ח
         </button>
       </div>
-      {     
-showReportModal &&
- <ReportModal reportResult={reportResult} columns={dinamicColums} columnsMappingToHebrew={fieldsOptions} onClose={onCloseModal}  onSubmit={handleSubmitExcel}/>
-}
+      {
+        showReportModal &&
+        <ReportModal reportResult={reportResult} columns={dinamicColums} columnsMappingToHebrew={fieldsOptions} onClose={onCloseModal} onSubmit={handleSubmitExcel} />
+      }
 
     </div>
   );
-  
-  
-  }
+
+
+}
 
 export default ReportCommitments

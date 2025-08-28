@@ -4,9 +4,21 @@ import { AgGridReact } from 'ag-grid-react';
 import { useState } from 'react';
 import { FaTrash } from 'react-icons/fa'; // ייבוא האייקון
 import { deleteTransaction } from '../../requests/ApiRequests';
-function TransactionsTable({ rowsData, fetchTransactions,gridRef}) {
-    const [searchText, setSearchText] = useState("");
-  
+function TransactionsTable({ rowsData, fetchTransactions, gridRef }) {
+  const [searchText, setSearchText] = useState("");
+
+  const heLocaleText = {
+    page: "עמוד",
+    more: "עוד",
+    to: "עד",
+    of: "מתוך",
+    next: "הבא",
+    last: "אחרון",
+    first: "ראשון",
+    previous: "הקודם",
+    loadingOoo: "טוען...",
+    noRowsToShow: "אין נתונים להצגה",
+  };
 
   const columns = [
     {
@@ -56,12 +68,12 @@ function TransactionsTable({ rowsData, fetchTransactions,gridRef}) {
         }
         return "";
       },
-    
-          
+
+
       filterParams: {
         comparator: (filterLocalDateAtMidnight, cellValue) => {
           const date = new Date(cellValue);
-          
+
           if (date < filterLocalDateAtMidnight) return -1;
           if (date > filterLocalDateAtMidnight) return 1;
           return 0;
@@ -85,8 +97,8 @@ function TransactionsTable({ rowsData, fetchTransactions,gridRef}) {
       },
 
     }
-    
-    
+
+
     ,
     {
       headerName: 'יתרה נוכחית',
@@ -118,48 +130,48 @@ function TransactionsTable({ rowsData, fetchTransactions,gridRef}) {
         }
         return null;
       },
-       cellStyle: {
-    display: "flex",
-    justifyContent: "center", // Horizontal center
-    alignItems: "center"      // Vertical center
-  }
+      cellStyle: {
+        display: "flex",
+        justifyContent: "center", // Horizontal center
+        alignItems: "center"      // Vertical center
+      }
     },
   ];
 
   const gridStyle = {
     width: '100%',
     height: '400px',
-    
+
   };
 
   const getRowStyle = (params) => {
     if (params.data.TransactionType === 'הוצאה') {
       return { backgroundColor: '#ffe6e6' }; // רקע אדום בהיר להוצאה
     } else if (params.data.TransactionType === 'הכנסה') {
-      return { backgroundColor: '#e6ffe6'}; // רקע ירוק בהיר להכנסה
+      return { backgroundColor: '#e6ffe6' }; // רקע ירוק בהיר להכנסה
     }
     return null;
   };
 
   const deleteTransactionProcess = async (node) => {
     console.log(node);
-  
+
     const isConfirmed = window.confirm('האם את/ה בטוח שאת/ה רוצה למחוק?');
-            if (isConfirmed) {
-              const transaction = node.data;
-              const transactionId = transaction._id;             
-              try {
-                const res = await deleteTransaction(transactionId);
-                fetchTransactions();
-              } catch (error) {
-                console.error(error);
-              }
-            }
-};
+    if (isConfirmed) {
+      const transaction = node.data;
+      const transactionId = transaction._id;
+      try {
+        const res = await deleteTransaction(transactionId);
+        fetchTransactions();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   return (
     <div>
-            <div className="w-[80vw] flex justify-start">
+      <div className="w-[80vw] flex justify-start">
         <input
           id="search"
           type="text"
@@ -170,13 +182,14 @@ function TransactionsTable({ rowsData, fetchTransactions,gridRef}) {
         />
       </div>
 
-      <div className="ag-theme-alpine h-[70vh] max-h-[65vh]"       style={{
+      <div className="ag-theme-alpine h-[69vh] max-h-[69vh]" style={{
         width: '100%', // Ensure the container is full width
       }}
       >
         <AgGridReact
           columnDefs={columns}
           rowData={rowsData}
+          localeText={heLocaleText}
           pagination={true}
           paginationPageSize={20}
           domLayout="normal"
@@ -188,13 +201,13 @@ function TransactionsTable({ rowsData, fetchTransactions,gridRef}) {
 
           gridOptions={{
             enableCellTextSelection: true,
-                           localeText:{
-                      noRowsToShow: 'אין שורות להצגה'
+            localeText: {
+              noRowsToShow: 'אין שורות להצגה'
 
-                }
+            }
 
           }}
-      
+
         />
       </div>
     </div>

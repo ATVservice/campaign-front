@@ -197,7 +197,7 @@ function PeopleInCampain2() {
         placeholder="חיפוש אנשים להוספה לקמפיין"
         value={searchNotText}
         onChange={(e) => setSearchNotText(e.target.value)}
-        className="block w-full mb-6 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 bg-sky-100 max-w-fit"
+        className="block w-full mb-4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 bg-sky-100 max-w-fit"
       />
       {peopleNotInCampain?.length > 0 && searchNotText?.length > 1 && (
         <div>

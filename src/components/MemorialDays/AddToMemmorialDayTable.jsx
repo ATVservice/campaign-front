@@ -4,12 +4,27 @@ import { AgGridReact } from "ag-grid-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 function AddToMemmorialDayTable({ rowData, onAddMemorialDayToPerson }) {
   const hebrewToEnglishMapping = {
     "מזהה אנש": "AnashIdentifier",
     שם: "FirstName",
     משפחה: "LastName",
   };
+
+  const heLocaleText = {
+    page: "עמוד",
+    more: "עוד",
+    to: "עד",
+    of: "מתוך",
+    next: "הבא",
+    last: "אחרון",
+    first: "ראשון",
+    previous: "הקודם",
+    loadingOoo: "טוען...",
+    noRowsToShow: "אין נתונים להצגה",
+  };
+
 
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState('');
@@ -124,6 +139,7 @@ function AddToMemmorialDayTable({ rowData, onAddMemorialDayToPerson }) {
             paginationPageSizeSelector={pageSizeOptions} // this property is not a valid AG Grid property
             domLayout="autoHeight" // Use autoHeight layout to adjust grid height automatically
             enableRtl={true}
+            localeText={heLocaleText}
               quickFilterText={searchText} // Applying the search text to filter the grid
             suppressClickEdit={true}
             defaultColDef={{

@@ -27,6 +27,19 @@ function CampainTable({ rowData, onDeletePersonFromCampain ,searchInText}) {
     'טל בית': 'HomePhone',
     'פעיל': 'isActive',
   };
+  const heLocaleText = {
+    page: "עמוד",
+    more: "עוד",
+    to: "עד",
+    of: "מתוך",
+    next: "הבא",
+    last: "אחרון",
+    first: "ראשון",
+    previous: "הקודם",
+    loadingOoo: "טוען...",
+    noRowsToShow: "אין נתונים להצגה",
+  };
+
 
 
   const ActionCellRenderer = (props) => {
@@ -129,7 +142,7 @@ function CampainTable({ rowData, onDeletePersonFromCampain ,searchInText}) {
       },
     },
 
-    { headerName: 'מזהה אנש', field: 'AnashIdentifier', editable: false, sortable: true, filter: true, width: 120 ,  sort: 'asc'  // This will sort the column from lowest to highest by default
+    { headerName: 'מזהה אנש', field: 'AnashIdentifier', editable: false, sortable: true, filter: true, width: 140 ,  sort: 'asc'  // This will sort the column from lowest to highest by default
     },
     { headerName: 'שם', field: 'FirstName', editable: true, sortable: true, filter: true },
     { headerName: 'משפחה', field: 'LastName', editable: true, sortable: true, filter: true },
@@ -195,6 +208,7 @@ function CampainTable({ rowData, onDeletePersonFromCampain ,searchInText}) {
         <AgGridReact
           columnDefs={columns}
           rowData={rowData}
+          localeText={heLocaleText}
           pagination={true}
           paginationPageSize={20} // Increase the pagination page size as needed
           paginationPageSizeSelector={pageSizeOptions} // this property is not a valid AG Grid property

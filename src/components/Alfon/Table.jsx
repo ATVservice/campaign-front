@@ -43,6 +43,20 @@ function Table({
     פעיל: "isActive",
     מתרים: "fundRaiser",
   };
+  const heLocaleText = {
+    page: "עמוד",
+    more: "עוד",
+    to: "עד",
+    of: "מתוך",
+    next: "הבא",
+    last: "אחרון",
+    first: "ראשון",
+    previous: "הקודם",
+    loadingOoo: "טוען...",
+    noRowsToShow: "אין נתונים להצגה",
+  };
+
+
 
   const ActionCellRenderer = (props) => {
     const isCurrentRowEditing = props.api
@@ -230,7 +244,7 @@ function Table({
           </div>
         );
       },
-      width: 70,
+      width: 100,
       headerComponent: CustomHeader,
       headerComponentParams: {
         displayName: "פרטים<br>מלאים",
@@ -252,6 +266,8 @@ function Table({
       sortable: true,
       filter: true,
       flex: 1,
+      minWidth: 120,
+      maxWidth: 200,
     },
     {
       headerName: "משפחה",
@@ -260,6 +276,8 @@ function Table({
       sortable: true,
       filter: true,
       flex: 1,
+      minWidth: 120,
+      maxWidth: 250,
     },
     {
       headerName: "כתובת",
@@ -283,6 +301,8 @@ function Table({
       sortable: true,
       filter: true,
       width: 100,
+      minWidth: 120,
+      maxWidth: 300,
     },
     {
       headerName: "טל בית",
@@ -300,19 +320,19 @@ function Table({
       filter: true,
       width: 150,
     },
-  
+
     {
       headerName: "עריכה/שחזור/מחיקה",
       cellRenderer: ActionCellRenderer,
       editable: false,
       colId: "action",
       width: 150,
-      flex:0,
+      flex: 0,
       cellStyle: {
-    display: "flex",
-    justifyContent: "center", // Horizontal center
-    alignItems: "center"      // Vertical center
-  }
+        display: "flex",
+        justifyContent: "center", // Horizontal center
+        alignItems: "center"      // Vertical center
+      }
     },
   ];
   const onRowEditingStarted = (params) => {
@@ -379,13 +399,13 @@ function Table({
           paginationPageSize={50} // Increase the pagination page size as needed
           domLayout="normal" // Use normal layout to keep grid within the container height
           enableRtl={true}
+          localeText={heLocaleText}
           onRowEditingStarted={onRowEditingStarted}
           onRowEditingStopped={onRowEditingStopped}
           quickFilterText={searchText} // Applying the search text to filter the grid
           ref={gridRef}
           editType="fullRow"
           suppressClickEdit={true}
-          // onGridReady={onGridReady}
           defaultColDef={{
             ...defaultColDef,
           }}

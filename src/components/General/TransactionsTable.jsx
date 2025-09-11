@@ -1,7 +1,7 @@
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from 'ag-grid-react';
-import { useState } from 'react';
+import { useState, useEffect } from "react";
 import { FaTrash } from 'react-icons/fa'; // ייבוא האייקון
 import { deleteTransaction } from '../../requests/ApiRequests';
 function TransactionsTable({ rowsData, fetchTransactions, gridRef }) {
@@ -19,6 +19,50 @@ function TransactionsTable({ rowsData, fetchTransactions, gridRef }) {
     loadingOoo: "טוען...",
     noRowsToShow: "אין נתונים להצגה",
   };
+
+  const replaceTextNodes = (rootEl, regex, replacement) => {
+    const walker = document.createTreeWalker(rootEl, NodeFilter.SHOW_TEXT, null, false);
+    const toChange = [];
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (regex.test(node.nodeValue)) {
+        toChange.push(node);
+      }
+    }
+    toChange.forEach((node) => {
+      node.nodeValue = node.nodeValue.replace(regex, replacement);
+    });
+  };
+
+  const replacePageSizeEverywhere = () => {
+    const containers = document.querySelectorAll(`
+      .ag-paging-panel,
+      .ag-paging-page-size-panel,
+      .ag-paging-page-size,
+      .ag-status-bar,
+      .ag-root-wrapper
+    `);
+    containers.forEach((el) => {
+      replaceTextNodes(el, /\bpage\s*size\b/gi, "רשומות בעמוד");
+    });
+  };
+
+  useEffect(() => {
+    const t1 = setTimeout(replacePageSizeEverywhere, 0);
+    const t2 = setTimeout(replacePageSizeEverywhere, 100);
+    const t3 = setTimeout(replacePageSizeEverywhere, 500);
+
+    const root = document.querySelector(".ag-root-wrapper") || document.body;
+    const mo = new MutationObserver(() => {
+      replacePageSizeEverywhere();
+    });
+    mo.observe(root, { subtree: true, childList: true, characterData: true });
+
+    return () => {
+      [t1, t2, t3].forEach(clearTimeout);
+      mo.disconnect();
+    };
+  }, []);
 
   const columns = [
     {

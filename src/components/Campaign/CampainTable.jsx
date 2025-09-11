@@ -27,6 +27,7 @@ function CampainTable({ rowData, onDeletePersonFromCampain ,searchInText}) {
     'טל בית': 'HomePhone',
     'פעיל': 'isActive',
   };
+
   const heLocaleText = {
     page: "עמוד",
     more: "עוד",
@@ -39,8 +40,6 @@ function CampainTable({ rowData, onDeletePersonFromCampain ,searchInText}) {
     loadingOoo: "טוען...",
     noRowsToShow: "אין נתונים להצגה",
   };
-
-
 
   const ActionCellRenderer = (props) => {
     const { api, node } = props;
